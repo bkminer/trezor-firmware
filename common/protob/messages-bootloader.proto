@@ -5,6 +5,10 @@ package hw.trezor.messages.bootloader;
 option java_package = "com.satoshilabs.trezor.lib.protobuf";
 option java_outer_classname = "TrezorMessageBootloader";
 
+option (include_in_bitcoin_only) = true;
+
+import "messages.proto";
+
 /**
  * Request: Ask device to erase its firmware (so it can be replaced via FirmwareUpload)
  * @start

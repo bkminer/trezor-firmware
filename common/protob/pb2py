@@ -339,33 +339,28 @@ class Descriptor:
             ext.name: ext.number for file in self.files for ext in file.extension
         }
 
+        if self.bitcoin_only:
+            self.files = [
+                f
+                for f in self.files
+                if self.get_extensions(f).get("include_in_bitcoin_only")
+            ]
+            logging.debug(f"found {len(self.files)} bitcoin-only files")
+
         # find message_type enum
         top_level_enums = itertools.chain.from_iterable(f.enum_type for f in self.files)
         self.message_type_enum = find_by_name(top_level_enums, MESSAGE_TYPE_ENUM, ())
         self.convert_enum_value_names(self.message_type_enum)
-
-        # top-level message inclusion filter that takes bitcoin_only into account
-        def should_include_message(message: ProtoMessage):
-            return (
-                # include all messages when not in bitcoin_only mode
-                not self.bitcoin_only
-                # include all non-wire messages
-                or message.wire_type is None
-                # include messages that are marked bitcoin_only
-                or message.extensions.get("bitcoin_only")
-            )
 
         # find messages and enums
         self.messages = []
         self.enums = []
 
         for file in self.files:
-            messages = (
+            messages = [
                 ProtoMessage.from_message(self, m)
                 for m in self._filter_items(file.message_type)
-            )
-            # use exclusion list on top-level messages
-            messages = [m for m in messages if should_include_message(m)]
+            ]
             self.messages += messages
             self.enums += self._filter_items(file.enum_type)
 
@@ -378,7 +373,6 @@ class Descriptor:
 
         for enum in self.enums:
             self.convert_enum_value_names(enum)
-
 
     def _filter_items(self, iter):
         return [
