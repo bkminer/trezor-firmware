@@ -381,7 +381,7 @@ import apps.misc.sign_identity
 apps.workflow_handlers
 import apps.workflow_handlers
 
-if utils.BITCOIN_ONLY:
+if not utils.BITCOIN_ONLY:
     trezor.enums.BinanceOrderSide
     import trezor.enums.BinanceOrderSide
     trezor.enums.BinanceOrderType
