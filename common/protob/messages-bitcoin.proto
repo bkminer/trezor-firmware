@@ -44,7 +44,7 @@ enum DecredStakingSpendType {
 /**
  * Unit to be used when showing amounts on the display
  */
- enum AmountUnit {
+enum AmountUnit {
     BITCOIN = 0;        // BTC
     MILLIBITCOIN = 1;   // mBTC
     MICROBITCOIN = 2;   // uBTC

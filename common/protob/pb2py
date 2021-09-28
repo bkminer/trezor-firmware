@@ -65,10 +65,15 @@ INT_TYPES = (
 
 MESSAGE_TYPE_ENUM = "MessageType"
 
+LengthDelimited = c.Struct(
+    "len" / c.VarInt,
+    "bytes" / c.Bytes(c.this.len),
+)
+
 ListOfSimpleValues = c.GreedyRange(
     c.Struct(
         "key" / c.VarInt,
-        "value" / c.VarInt,
+        "value" / c.Switch(c.this.key & 0b111, {0: c.VarInt, 2: LengthDelimited}),
     )
 )
 
@@ -76,7 +81,8 @@ ListOfSimpleValues = c.GreedyRange(
 def parse_protobuf_simple(data):
     """Micro-parse protobuf-encoded data.
 
-    Assume every field is of type 0 (varint), and parse to a dict of fieldnum: value.
+    Assume every value is of type 0 (varint) or 2 (length-delimited),
+    and parse to a dict of fieldnum: value.
     """
     return {v.key >> 3: v.value for v in ListOfSimpleValues.parse(data)}
 
