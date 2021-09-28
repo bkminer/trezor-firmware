@@ -1078,6 +1078,8 @@ static bool signing_validate_bin_output(TxOutputBinType *tx_bin_output) {
     signing_abort();
     return false;
   }
+#else
+  (void)tx_bin_output;
 #endif
   return true;
 }
