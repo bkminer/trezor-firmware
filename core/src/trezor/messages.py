@@ -3176,12 +3176,12 @@ if TYPE_CHECKING:
             return isinstance(msg, cls)
 
     class EthereumTypedDataValueAck(protobuf.MessageType):
-        value: "str"
+        value: "bytes"
 
         def __init__(
             self,
             *,
-            value: "str",
+            value: "bytes",
         ) -> None:
             pass
 
