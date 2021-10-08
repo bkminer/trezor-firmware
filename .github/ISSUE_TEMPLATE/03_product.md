@@ -10,4 +10,3 @@ assignees: ''
 **Design:** [Figma](TODO)
 
 **Spec:** [Notion](TODO)
-
